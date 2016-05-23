@@ -20,17 +20,23 @@
             return IsProgressive(n);
         }
 
-        [TestCase(1000000)]
+        [TestCase(100000000000)]
         public void ListProgressivesUpTo(long n)
         {
             for (long i = n; i >= 2; i--)
             {
-                if (IsProgressive(i))
+                if (IsPerfectSquare(i) && IsProgressive(i))
                 {
                     continue;
                     //Console.WriteLine(i);
                 }
             }
+        }
+
+        bool IsPerfectSquare(long input)
+        {
+            long closestRoot = (long)Math.Sqrt(input);
+            return input == closestRoot * closestRoot;
         }
 
         private static bool IsProgressive(long n)
@@ -52,7 +58,7 @@
 
                 if (isProgressive)
                 {
-                    //Console.WriteLine("{0} * {1} + {2} = {3} with factor {4:F}. Time: {5}", m2, m1, rest, n, m2 / (double)m1, sw.ElapsedMilliseconds);
+                    Console.WriteLine("{0} * {1} + {2} = {3} with factor {4:F}", m2, m1, rest, n, m2 / (double)m1);
                     break;
                 }
             }
