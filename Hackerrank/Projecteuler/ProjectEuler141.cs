@@ -20,17 +20,20 @@
             return IsProgressive(n);
         }
 
-        [TestCase(100000000000)]
+        [TestCase(1000000000)]
         public void ListProgressivesUpTo(long n)
         {
-            for (long i = n; i >= 2; i--)
+            long prevsquare = 1;
+            long prevsquareroot = 1;
+
+            while (prevsquare <= n)
             {
-                if (IsPerfectSquare(i) && IsProgressive(i))
-                {
-                    continue;
-                    //Console.WriteLine(i);
-                }
+                prevsquareroot++;
+                prevsquare = prevsquare + 2 * prevsquareroot - 1;
+                IsProgressive(prevsquare);
+                //Console.WriteLine("{0}^2 = {1}", prevsquareroot, prevsquare);
             }
+                        
         }
 
         bool IsPerfectSquare(long input)
@@ -42,7 +45,7 @@
         private static bool IsProgressive(long n)
         {
             bool isProgressive = false;
-            var upperMultiplier = (long)Math.Floor(Math.Sqrt(n));
+            long upperMultiplier = (long)Math.Floor(Math.Sqrt(n));
 
             for (long m1 = upperMultiplier; m1 >= 2 ; m1--)
             {                
@@ -65,5 +68,58 @@
 
             return isProgressive;
         }
+
+//        private static bool IsProgressive(long n)
+//        {
+//            bool isProgressive = false;
+//            long upperMultiplier = (long)Math.Floor(Math.Sqrt(n));
+//            long middle = upperMultiplier / 2;
+//
+//            for (long m1 = middle, mm1 = middle + 1; m1 >= 2 || mm1 <= upperMultiplier; m1--, mm1++)
+//            {
+//                long m2;
+//                long rest;
+//
+//                if (m1 >= 2)
+//                {
+//                    m2 = n / m1;
+//                    rest = n % m1;
+//
+//                    if (rest == 0)
+//                    {
+//                        continue;
+//                    }
+//
+//                    isProgressive = Math.Abs(m2 / (double)m1 - m1 / (double)rest) < 1e-8;
+//
+//                    if (isProgressive)
+//                    {
+//                        Console.WriteLine("{0} * {1} + {2} = {3} with factor {4:F}", m2, m1, rest, n, m2 / (double)m1);
+//                        break;
+//                    }
+//                }
+//
+//                if (mm1 <= upperMultiplier)
+//                {
+//                    m2 = n / mm1;
+//                    rest = n % mm1;
+//
+//                    if (rest == 0)
+//                    {
+//                        continue;
+//                    }
+//
+//                    isProgressive = Math.Abs(m2 / (double)mm1 - mm1 / (double)rest) < 1e-8;
+//
+//                    if (isProgressive)
+//                    {
+//                        Console.WriteLine("{0} * {1} + {2} = {3} with factor {4:F}", m2, mm1, rest, n, m2 / (double)mm1);
+//                        break;
+//                    }
+//                }
+//            }
+//
+//            return isProgressive;
+//        }
     }
 }
