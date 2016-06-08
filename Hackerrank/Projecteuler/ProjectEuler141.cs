@@ -36,11 +36,6 @@
                         
         }
 
-        bool IsPerfectSquare(long input)
-        {
-            long closestRoot = (long)Math.Sqrt(input);
-            return input == closestRoot * closestRoot;
-        }
 
         private static bool IsProgressive(long n)
         {
