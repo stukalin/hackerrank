@@ -7,9 +7,10 @@
     using Hackerrank.Utils;
 
     using NUnit.Framework;
+    using NUnit.Framework.Compatibility;
 
     [TestFixture]
-    class ProjectEuler142
+    class ProjectEuler142 : BaseTest
     {
         [Test]
         public void HowManyAreThere()
@@ -20,34 +21,45 @@
         [TestCase(1)]
         public void LetsTry(int casesNeeded)
         {
-            SortedList<long, long> values = new SortedList<long, long>();
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+            SortedDictionary<long, long> values = new SortedDictionary<long, long>();
 
-            foreach (var tuple in MathUtil.PerfectSquaresUpTo(100000000))
+            long upperborder = 100L;
+
+            // todo this should be 10^12 
+            foreach (var tuple in MathUtil.PerfectSquaresUpTo(upperborder))
             {
-                //Console.WriteLine("For {0}^2 = {1}", tuple.Item1, tuple.Item2);
-
                 long root = tuple.Item1;
                 long addition = 0L;
                 // find how much we need to add for the next square
-                while (addition < 1000000)
+                long x = 0;
+
+                Log.InfoFormat("for the root {0}", root);
+
+                // todo this should be 10^12
+                while (x <= upperborder)
                 {
-                    addition += 2 * (root + 1) + 2 * (root + 2) - 2;
-                    long next2ndsquare = tuple.Item2 + addition;
-
+                    addition += 4 * root + 4;
                     long y = addition / 2;
-                    long x = next2ndsquare - y;
+                    x = tuple.Item2 + y;
 
-                    //Console.WriteLine("found a couple {0} - {1}", x, y);
+                    if (x > upperborder)
+                    {
+                        break;
+                    }
+
+                    Log.InfoFormat("found a couple {0} - {1} with addition {2}", x, y, addition);
                     root += 2;
 
-                    //Assert.That(MathUtil.IsPerfectSquare(x+y), Is.True);
-                    //Assert.That(MathUtil.IsPerfectSquare(x-y), Is.True);
+                    Assert.That(MathUtil.IsPerfectSquare(x+y), Is.True);
+                    Assert.That(MathUtil.IsPerfectSquare(x-y), Is.True);
 
                     long z;
                     if (values.ContainsKey(y))
                     {
                         z = values[y];
-                        //Console.WriteLine("Probable triple by y: {0}, {1}, {2}", x, y, z);
+                        Log.InfoFormat("Probable triple by y: {0}, {1}, {2}", x, y, z);
 
                         if (MathUtil.IsPerfectSquare(x + z) && MathUtil.IsPerfectSquare(x - z))
                         {
@@ -82,7 +94,7 @@
                     if (values.ContainsKey(x))
                     {
                         z = values[x];
-                        //Console.WriteLine("Probable triple by x: {0}, {1}, {2}", z, x, y);
+                        Log.InfoFormat("Probable triple by x: {0}, {1}, {2}", z, x, y);
                         if (MathUtil.IsPerfectSquare(y + z) && MathUtil.IsPerfectSquare(y - z))
                         {
                             if (x > z)
@@ -113,6 +125,9 @@
                     }
                 }
             }
+
+            sw.Stop();
+            Log.InfoFormat("{0}ms passed", sw.ElapsedMilliseconds);
         }
     }
 }
