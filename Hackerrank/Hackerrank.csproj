@@ -50,6 +50,7 @@
     <Compile Include="Projecteuler\ProjectEuler141.cs" />
     <Compile Include="Projecteuler\ProjectEuler1.cs" />
     <Compile Include="Projecteuler\ProjectEuler142.cs" />
+    <Compile Include="Projecteuler\ProjectEuler2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils\MathUtil.cs" />
   </ItemGroup>

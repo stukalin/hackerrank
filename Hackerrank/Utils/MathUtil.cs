@@ -38,5 +38,29 @@
             long closestRoot = (long)Math.Sqrt(input);
             return input == closestRoot * closestRoot;
         }
+
+        public static long LastFibUpto(long n)
+        {
+            long a = 1, b = 1;
+            while (a < n)
+            {
+                a = a + b;
+                b = a - b;
+            }
+
+            return b;
+        }
+
+        public static IEnumerable<long> FibUpto(long n)
+        {
+            long a = 1, b = 1;
+            while (a < n)
+            {
+                a = a + b;
+                b = a - b;
+
+                yield return b;
+            }
+        }
     }
 }
