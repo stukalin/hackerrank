@@ -1,10 +1,23 @@
-﻿namespace Hackerrank.BotBuilding
+﻿using System;
+using System.Collections.Generic;
+
+namespace Hackerrank.BotBuilding
 {
     using NUnit.Framework;
 
     [TestFixture]
     class BotSavesPrincess : BaseTest
     {
+        private int minDepth;
+        private Directions[] minPath;
+
+        internal enum Directions : byte
+        {
+            Left,
+            Right,
+            Up, 
+            Down
+        }
 
         [TestCase("----m-p--", 3)]
         public void Solution(string input, int n)
@@ -24,59 +37,59 @@
                 }
             }
 
-            FindPrincess(arr, x, y);
+            minDepth = int.MaxValue;
+            FindPrincess(arr, x, y, 0, new Stack<Directions>());
+
+            foreach (var directionse in minPath)
+            {
+                Console.WriteLine(directionse.ToString().ToUpper());
+            }
         }
 
-        public bool FindPrincess(char[,] maze, int x, int y)
+        public bool FindPrincess(char[,] maze, int x, int y, int depth, Stack<Directions> path)
         {
+            if (depth >= minDepth)
+            {
+                return false;
+            }
+
             var len = maze.GetLength(0);
             if (maze[x, y] == 'p')
             {
-                Log.InfoFormat("found at {0}; {1}", x, y);
+                minDepth = depth;
+                minPath = path.ToArray();
                 return true;
             }
 
             maze[x, y] = 'v';
-            
-                // possible to go
-                if (x-1 >=0 && maze[x - 1, y] != 'v')
-                {
-                    if (FindPrincess(maze, x - 1, y))
-                    {
-                        Log.InfoFormat("up to {0}; {1}", x - 1, y);
-                        return true;
-                    }
-                }
 
-                // possible to go
-                if (x + 1 < len && maze[x + 1, y] != 'v')
-                {
-                    if (FindPrincess(maze, x + 1, y))
-                    {
-                        Log.InfoFormat("down to {0}; {1}", x + 1, y);
-                        return true;
-                    }
-                }
+            if (x - 1 >= 0 && maze[x - 1, y] != 'v')
+            {
+                path.Push(Directions.Up);
+                FindPrincess(maze, x - 1, y, depth + 1, path);
+                path.Pop();
+            }
 
-                // possible to go
-                if (y - 1 >= 0 && maze[x, y - 1] != 'v')
-                {
-                    if (FindPrincess(maze, x, y - 1))
-                    {
-                        Log.InfoFormat("left to {0}; {1}", x, y-1);
-                        return true;
-                    }
-                }
+            if (x + 1 < len && maze[x + 1, y] != 'v')
+            {
+                path.Push(Directions.Down);
+                FindPrincess(maze, x + 1, y, depth + 1, path);
+                path.Pop();
+            }
 
-                // possible to go
-                if (y + 1 < len && maze[x, y + 1] != 'v')
-                {
-                    if (FindPrincess(maze, x, y + 1))
-                    {
-                        Log.InfoFormat("right to {0}; {1}", x, y+1);
-                        return true;
-                    }
-                }
+            if (y - 1 >= 0 && maze[x, y - 1] != 'v')
+            {
+                path.Push(Directions.Left);
+                FindPrincess(maze, x, y - 1, depth + 1, path);
+                path.Pop();
+            }
+
+            if (y + 1 < len && maze[x, y + 1] != 'v')
+            {
+                path.Push(Directions.Right);
+                FindPrincess(maze, x, y + 1, depth + 1, path);
+                path.Pop();
+            }
 
             maze[x, y] = '-';
             return false;
