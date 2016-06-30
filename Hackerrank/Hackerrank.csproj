@@ -58,6 +58,7 @@
     <Compile Include="Utils\MathUtil.cs" />
     <Compile Include="WeekOfCode21\DemandingMoney.cs" />
     <Compile Include="WeekOfCode21\Kangaroo.cs" />
+    <Compile Include="WeekOfCode21\LazySorting.cs" />
     <Compile Include="WeekOfCode21\LuckBalance.cs" />
   </ItemGroup>
   <ItemGroup>
