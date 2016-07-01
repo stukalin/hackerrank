@@ -12,7 +12,8 @@ namespace Hackerrank.WeekOfCode21
     {
         private int maxMoney;
 
-        private List<List<int>> usedPaths;
+        //private SortedSet<string> usedPaths;
+        private SortedDictionary<string, string> usedPaths;
 
         private int[] moneys;
 
@@ -33,10 +34,20 @@ namespace Hackerrank.WeekOfCode21
             Assert.That(result, Is.EqualTo("0 10"));
         }
 
+        [Test]
+        public void Test3()
+        {
+            var result = Solution(34, 0, Enumerable.Repeat(0, 34).ToArray(), new int[0,0]);
+            //var result = Solution(9, 0, Enumerable.Repeat(0, 9).ToArray(), new int[0,0]);
+            Console.WriteLine(result);
+            //Assert.That(result, Is.EqualTo("8 2"));
+        }
+
         public string Solution(int n, int m, int[] cs, int[,] abs)
         {
             maxMoney = 0;
-            usedPaths = new List<List<int>>();
+            usedPaths = new SortedDictionary<string, string>();
+            //usedPaths = new SortedSet<string>();
             moneys = cs;
 
             char[,] paths = new char[n, n];
@@ -58,13 +69,13 @@ namespace Hackerrank.WeekOfCode21
 
             for (int i = 0; i < n; i++)
             {
-                Step(i, 0, new List<int>(), paths, new List<int>());
+                Step(i, 0, new List<int>(), paths, new int[n]);
             }
 
             return string.Format("{0} {1}", maxMoney, usedPaths.Count);
         }
 
-        public void Step(int row, int sum, List<int> curpath, char[,] paths, List<int> forbidden)
+        public void Step(int row, int sum, List<int> curpath, char[,] paths, int[] forbidden)
         {
             // add the sum 
             sum += moneys[row];
@@ -75,31 +86,36 @@ namespace Hackerrank.WeekOfCode21
             {
                 if (paths[row, i] == '1')
                 {
-                    forbidden.Add(i);
+                    forbidden[i]++;
                 }
             }
 
             for (int j = 0; j < paths.GetLength(0); j++)
             {
-                if (paths[row, j] == '0' && !forbidden.Contains(j))
+                if (paths[row, j] == '0' && forbidden[j] == 0)
                 {
-                    // make a step
-                    Step(j, sum, curpath, paths, forbidden);
+                    if (sum + this.moneys[row] >= this.maxMoney)
+                    {
+                        // make a step
+                        Step(j, sum, curpath, paths, forbidden);
+                    }
                 }
             }
 
+            var key = string.Join(",", curpath);
             if (sum > maxMoney)
             {
                 maxMoney = sum;
                 usedPaths.Clear();
-                usedPaths.Add(curpath.ToList());
+                usedPaths.Add(key, key);
             }
             else if (sum == maxMoney)
             {
-                if (usedPaths.All(a => a.Except(curpath).Any()))
-                {
-                    usedPaths.Add(curpath.ToList());
-                }
+                usedPaths.Add(key, key);
+//                if (usedPaths.All(a => a.Except(curpath).Any()))
+//                {
+//                    usedPaths.Add(curpath.ToList());
+//                }
             }
 
             // rollback
@@ -110,7 +126,7 @@ namespace Hackerrank.WeekOfCode21
             {
                 if (paths[row, i] == '1')
                 {
-                    forbidden.Remove(i);
+                    forbidden[i]--;
                 }
             }
         }
