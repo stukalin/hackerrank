@@ -47,8 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
+    <Compile Include="BotBuilding\BotCleanPartiallyObservable.cs" />
     <Compile Include="BotBuilding\BotClean.cs" />
     <Compile Include="BotBuilding\BotSavesPrincess.cs" />
+    <Compile Include="BotBuilding\MazeEnv.cs" />
     <Compile Include="BotBuilding\MazeEscape.cs" />
     <Compile Include="Projecteuler\ProjectEuler141.cs" />
     <Compile Include="Projecteuler\ProjectEuler1.cs" />
