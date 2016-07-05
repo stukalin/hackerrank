@@ -7,62 +7,15 @@
     using NUnit.Framework;
 
     [TestFixture]
-    class BotCleanPartiallyObservable : BaseTest
+    class BotCleanPartiallyObservable : MazeEnv
     {
-        [TestCase("b---d-d--d--dd---d------d", 5, 0, 0)]
+        [TestCase("----d-d--d--dd---d------d", 5, 0, 0)]
         public void Solution(string input, int n, int x, int y)
         {
-            var arr = new char[n, n];
+            var arr = GenerateGrid(input, n, n);
             var bot = new DiscretePoint(x, y);
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    arr[i, j] = input[i * n + j];
-                }
-            }
 
-            CleanAll(arr, bot);
-        }
-
-        static void CleanAll(char[,] grid, DiscretePoint bot)
-        {
-            DiscretePoint dirty = null;
-            DiscretePoint hidden = null;
-            do
-            {
-                dirty = FindNextClosestDirty(grid, bot);
-                Directions dir;
-                if (dirty != null)
-                {
-                    
-                    do
-                    {
-                        dir = GridUtils.GetBotDirection(bot, dirty);
-                        if (dir != Directions.Stop)
-                        {
-                            Console.WriteLine(dir.ToString().ToUpper());
-                        }
-                        else
-                        {
-                            Console.WriteLine("CLEAN");
-                            grid[dirty.Y, dirty.X] = '-';
-                        }
-                        bot.Move(dir);
-                    }
-                    while (dir != Directions.Stop);
-                }
-                else
-                {
-                    hidden = FindFurthestHidden(grid, bot);
-                    if (hidden != null)
-                    {
-                        dir = GridUtils.GetBotDirection(bot, hidden);
-                        bot.Move(dir);
-                    }
-                }
-            }
-            while (dirty != null || hidden != null);
+            Solve(arr, bot, true);
         }
 
         static DiscretePoint FindNextClosestDirty(char[,] grid, DiscretePoint bot)
@@ -79,7 +32,7 @@
                         if (distance < min)
                         {
                             min = distance;
-                            dirty = new DiscretePoint(j,i);
+                            dirty = new DiscretePoint(j, i);
                         }
                     }
                 }
@@ -111,5 +64,68 @@
             return dirty;
         }
 
+        public override string NextStep(char[,] grid, DiscretePoint bot)
+        {
+            // check if file exists
+            if (!this.CheckIfFileExists())
+            {
+                SaveFile(grid);
+            }
+
+            var cleangrid = this.ReadFile();
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int j = -1; j <= 1; j++)
+                {
+                    CheckAndCopy(grid, cleangrid, bot.Y + i, bot.X + j);
+                }
+            }
+
+            SaveFile(cleangrid);
+
+            DiscretePoint dirty = null;
+            dirty = FindNextClosestDirty(cleangrid, bot);
+            Directions dir;
+            if (dirty != null)
+            {
+                dir = GridUtils.GetBotDirection(bot, dirty);
+                if (dir != Directions.Stop)
+                {
+                    return dir.ToString().ToUpper();
+                }
+                else
+                {
+                    return "CLEAN";
+                }
+            }
+            else
+            {
+                var hidden = FindFurthestHidden(cleangrid, bot);
+                if (hidden != null)
+                {
+                    dir = GridUtils.GetBotDirection(bot, hidden);
+                    return dir.ToString().ToUpper();
+                }
+            }
+
+            return null;
+        }
+
+        public override bool CheckIfSolved(char[,] grid)
+        {
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                for (int j = 0; j < grid.GetLength(1); j++)
+                {
+                    if (grid[i, j] == 'd')
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
     }
 }

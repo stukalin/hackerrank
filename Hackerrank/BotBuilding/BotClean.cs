@@ -1,7 +1,5 @@
 ﻿namespace Hackerrank.BotBuilding
 {
-    using System;
-
     using Hackerrank.Utils.Grid;
 
     using NUnit.Framework;
@@ -9,18 +7,11 @@
     [TestFixture]
     class BotClean : MazeEnv
     {
-        [TestCase("b---d-d--d--dd---d------d", 5, 0, 0)]
+        [TestCase("d---d-d--d--dd---d------d", 5, 0, 0)]
         public void Solution(string input, int n, int x, int y)
         {
-            var arr = new char[n, n];
+            var arr = GenerateGrid(input, n, n);
             var bot = new DiscretePoint(x, y);
-            for (int i = 0; i < n; i++)
-            {
-                for (int j = 0; j < n; j++)
-                {
-                    arr[i, j] = input[i * n + j];
-                }
-            }
 
             Solve(arr, bot);
         }
@@ -54,8 +45,7 @@
             dirty = FindNextClosestDirty(grid, bot);
             if (dirty != null)
             {
-                Directions dir;
-                dir = GridUtils.GetBotDirection(bot, dirty);
+                var dir = GridUtils.GetBotDirection(bot, dirty);
                 if (dir != Directions.Stop)
                 {
                     return dir.ToString().ToUpper();
