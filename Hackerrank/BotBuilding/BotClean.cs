@@ -59,7 +59,7 @@
             return null;
         }
 
-        public override bool CheckIfSolved(char[,] grid)
+        public override bool CheckIfSolved(char[,] grid, DiscretePoint bot)
         {
             for (int i = 0; i < grid.GetLength(0); i++)
             {

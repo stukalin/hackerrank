@@ -12,6 +12,22 @@
 
         public int Y { get; set; }
 
+        public int I
+        {
+            get
+            {
+                return Y;
+            }
+        }
+
+        public int J
+        {
+            get
+            {
+                return X;
+            }
+        }
+
         public void Move(Directions d)
         {
             switch (d)

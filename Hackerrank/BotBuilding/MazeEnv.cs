@@ -13,7 +13,7 @@
 
         public abstract string NextStep(char[,] grid, DiscretePoint bot);
 
-        public abstract bool CheckIfSolved(char[,] grid);
+        public abstract bool CheckIfSolved(char[,] grid, DiscretePoint bot);
 
         public char[,] GenerateGrid(string s, int h, int w)
         {
@@ -49,7 +49,7 @@
         public void Solve(char[,] grid, DiscretePoint bot, bool restrict = false, int maxSteps = 100)
         {
             int steps = 0;
-            while (!CheckIfSolved(grid) && steps <= maxSteps)
+            while (!CheckIfSolved(grid, bot) && steps <= maxSteps)
             {
                 var restrictView = this.RestrictView(grid, bot, restrict);
                 PrintMaze(restrictView, bot);
@@ -95,7 +95,7 @@
             this.fileExists = true;
         }
 
-        private char[,] RestrictView(char[,] source, DiscretePoint bot, bool restrict)
+        protected virtual char[,] RestrictView(char[,] source, DiscretePoint bot, bool restrict)
         {
             if (!restrict)
             {

@@ -51,6 +51,7 @@
     <Compile Include="BotBuilding\BotClean.cs" />
     <Compile Include="BotBuilding\BotSavesPrincess.cs" />
     <Compile Include="BotBuilding\MazeEnv.cs" />
+    <Compile Include="BotBuilding\MazeEnvEscape.cs" />
     <Compile Include="BotBuilding\MazeEscape.cs" />
     <Compile Include="Projecteuler\ProjectEuler141.cs" />
     <Compile Include="Projecteuler\ProjectEuler1.cs" />
